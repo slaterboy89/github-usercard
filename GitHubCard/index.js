@@ -3,7 +3,17 @@
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
 */
+import axios from 'axios';
+const cards = document.querySelector('.cards')
+const myData = 'http://api.github.com/users/slaterboy89'
 
+axios.get(myData)
+  .then( (response) => {
+    cards.appendChild(cardMaker(response))
+  })
+  .catch( (error) => {
+    console.log('error')
+  })
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
     github info! You will need to understand the structure of this
@@ -28,7 +38,17 @@
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = ['tetondan', 'dustinmyers', 'justsml', 'luishrd', 'bigknell'];
+followersArray.forEach(user => {
+  axios.get(`https://api.github.com/users/${user}`)
+  .then( (response) => {
+    cards.appendChild(cardMaker(response))
+  })
+  .catch( (error) => {
+    console.log('error')
+  })
+})
+console.log(followersArray)
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -49,6 +69,53 @@ const followersArray = [];
       </div>
     </div>
 */
+function cardMaker (userObj) {
+
+  const card = document.createElement('div')
+  const cardImg = document.createElement('img')
+  const cardInfo = document.createElement('div')
+  const usersName = document.createElement('h3')
+  const username = document.createElement('p')
+  const location = document.createElement('p')
+  const profile = document.createElement('p')
+ 
+  const profileLink = document.createElement('a')
+  const followers = document.createElement('p')
+  const following = document.createElement('p')
+  const bio = document.createElement('p')
+
+  card.classList.add('card')
+  cardInfo.classList.add('card-info')
+  usersName.classList.add('name')
+  username.classList.add('username')
+
+  cardImg.src = userObj.data.avatar_url
+  usersName.textContent = userObj.data.name
+  username.textContent = userObj.data.login
+  location.textContent = userObj.data.location
+  profile.textContent = 'Profile: '
+  profileLink.textContent = userObj.data.html_url
+  followers.textContent = `Followers: ${userObj.data.followers}`
+  following.textContent = `Following: ${userObj.data.following}`
+  bio.textContent = `Bio: ${userObj.data.bio}`
+
+  cards.appendChild(card)
+  card.appendChild(cardImg)
+  card.appendChild(cardInfo)
+  cardInfo.appendChild(usersName)
+  cardInfo.appendChild(username)
+  cardInfo.appendChild(location)
+  cardInfo.appendChild(profile)
+  profile.appendChild(profileLink)
+  cardInfo.appendChild(followers)
+  cardInfo.appendChild(following)
+  cardInfo.appendChild(bio)
+  console.log(followers)
+ 
+  return card
+}
+
+
 
 /*
   List of LS Instructors Github username's:
